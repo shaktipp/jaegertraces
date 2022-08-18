@@ -33,7 +33,7 @@ pipeline
             steps
             {
                 sh "cd ./docker-compose"
-                sh "sh docker compose build"
+                sh "docker compose build"
                 sh "cd .."
             }
         }
