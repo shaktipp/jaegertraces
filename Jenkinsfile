@@ -20,6 +20,13 @@ pipeline
             }
         }
         
+        stage('Build')
+        {
+            steps{
+                sh "mvn clean install -DskipTests=true -U"
+            }
+        }
+        
 
 
     }//End of stages block
