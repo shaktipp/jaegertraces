@@ -23,7 +23,7 @@ pipeline
         stage('Backend Build')
         {
             steps{
-                sh "cd ./jaegerBacktend"
+                sh "cd ./jaegerBackend"
                 sh "mvn clean install -DskipTests=true -U"
                 sh "cd .."
             }
