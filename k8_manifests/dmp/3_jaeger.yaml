@@ -1,0 +1,83 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger-deployment
+  namespace: jaeger-ns
+  labels:
+    fico.application.owner: ProgramBlue
+    fico.application.name: jaeger-server-deployment
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      fico.application.owner: ProgramBlue
+      fico.application.name: jaeger-server-deployment
+  template:
+    metadata:
+      labels:
+        fico.application.owner: ProgramBlue
+        fico.application.name: jaeger-server-deployment
+    spec:
+      imagePullSecrets:
+        - name: dmpregistrykey
+      containers:
+        - name: jaeger-deployment
+          image: fico-dmp-docker-development.jfrog.io/fico/observability/jaeger-tracing-all-in-one:1.35
+          imagePullPolicy: Always
+          ports:
+            - name: udp-port
+              protocol: UDP
+              containerPort: 6831
+            - name: udp-binary-port
+              protocol: UDP
+              containerPort: 6832
+            - name: jaeger-ui-port
+              protocol: TCP
+              containerPort: 16686
+            - name: http-col-port #must be no more than 15 characters
+              protocol: TCP
+              containerPort: 14268
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    fico.application.owner: ProgramBlue
+    fico.application.name: jaeger-server-service
+  name: jaeger-service
+  namespace: jaeger-ns
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: external
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+spec:
+  #type: LoadBalancer #  may not contain more than 1 protocol when type is 'LoadBalancer'
+  type: ClusterIP
+  ports:
+    - name: udp-port
+      protocol: UDP
+      port: 6831
+      targetPort: 6831
+
+    - name: udp-binary-port
+      protocol: UDP
+      port: 6832
+      targetPort: 6832
+
+    - name: jaeger-ui-port
+      protocol: TCP
+      port: 16686
+      targetPort: 16686
+
+    - name: http-col-port
+      protocol: TCP
+      port: 14268
+      targetPort: 14268
+
+  selector:
+    fico.application.owner: ProgramBlue
+    fico.application.name: jaeger-server-deployment

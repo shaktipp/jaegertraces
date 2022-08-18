@@ -1,0 +1,51 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.backendApp.name}}-deployment
+  labels:
+    {{- include "chart.labels" . | indent 2 }}
+    fico.application.name: {{ .Values.backendApp.name }}
+
+spec:
+  replicas: {{ .Values.backendApp.replicas }}
+  selector:
+    matchLabels:
+      {{- include "chart.labels" . | indent 4 }}
+      fico.application.name: {{ .Values.backendApp.name }}
+  template:
+    metadata:
+      labels:
+        {{- include "chart.labels" . | indent 6 }}
+        fico.application.name: {{ .Values.backendApp.name }}
+    spec:
+      containers:
+        - name: jaeger-backend-container
+          image: {{ .Values.backendApp.image}}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .Values.backendApp.port}}
+          env:
+            - name: JAEGER_AGENT_HOST
+              value: jaeger-service
+
+            - name: JAEGER_AGENT_PORT
+              value: "14268"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.backendApp.name }}-service
+  labels:
+    {{- include "chart.labels" . | indent 2 }}
+    fico.application.name: {{ .Values.backendApp.name }}-svc
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8081
+      targetPort: 8081
+  selector:
+    {{- include "chart.labels" . | indent 2 }}
+    fico.application.name: {{ .Values.backendApp.name }}

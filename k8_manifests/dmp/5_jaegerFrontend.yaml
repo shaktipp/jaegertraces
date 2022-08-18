@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger-frontend-deployment
+  namespace: jaeger-ns
+  labels:
+    fico.application.owner: ProgramBlue
+    fico.application.name: jaeger-frontend-deploy
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      fico.application.owner: ProgramBlue
+      fico.application.name: jaeger-frontend
+  template:
+    metadata:
+      labels:
+        fico.application.owner: ProgramBlue
+        fico.application.name: jaeger-frontend
+    spec:
+      imagePullSecrets:
+        - name: dmpregistrykey
+      containers:
+        - name: jaeger-frontend-container
+          image: fico-dmp-docker-development.jfrog.io/fico/observability/jaeger_frontend_image:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: JAEGER_AGENT_HOST
+              value: jaeger-service
+
+            - name: JAEGER_AGENT_PORT
+              value: "14268"
+
+            - name: BACKEND_HOST
+              value: jaeger-backend-service
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-frontend-service
+  namespace: jaeger-ns
+  labels:
+    fico.application.owner: ProgramBlue
+    fico.application.name: jaeger-frontend-svc
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+
+  selector:
+    fico.application.owner: ProgramBlue
+    fico.application.name: jaeger-frontend

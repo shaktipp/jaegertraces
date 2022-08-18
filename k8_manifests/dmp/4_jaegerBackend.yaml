@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger-backend-deployment
+  namespace: jaeger-ns
+  labels:
+    fico.application.owner: ProgramBlue
+    fico.application.name: jaeger-backend-deploy
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      fico.application.owner: ProgramBlue
+      fico.application.name: jaeger-backend
+  template:
+    metadata:
+      labels:
+        fico.application.owner: ProgramBlue
+        fico.application.name: jaeger-backend
+    spec:
+      imagePullSecrets:
+        - name: dmpregistrykey
+      containers:
+        - name: jaeger-backend-container
+          image: fico-dmp-docker-development.jfrog.io/fico/observability/jaeger_backend_image:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+          env:
+            - name: JAEGER_AGENT_HOST
+              value: jaeger-service
+
+            - name: JAEGER_AGENT_PORT
+              value: "14268"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-backend-service
+  namespace: jaeger-ns
+  labels:
+    fico.application.owner: ProgramBlue
+    fico.application.name: jaeger-backend-svc
+spec:
+  ports:
+    - port: 8081
+      targetPort: 8081
+  selector:
+    fico.application.owner: ProgramBlue
+    fico.application.name: jaeger-backend

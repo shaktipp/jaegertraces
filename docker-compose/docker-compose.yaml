@@ -1,0 +1,61 @@
+version: '3.7'
+services:
+  jaegerAllinone:
+    image: jaegertracing/all-in-one:1.35
+    ports:
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "16686:16686"
+      - "14268:14268"
+      - "9411:9411"
+    #hostname: jaegerServer
+    environment:
+      COLLECTOR_ZIPKIN_HOST_PORT: 9411
+      OLLECTOR_OTLP_ENABLED: "true"
+    networks:
+      - spp-network
+
+
+  jaegerBackend:
+    build:
+      dockerfile: dockerfile
+      context: ./jaegerBackend
+
+    image: jaeger_backend_image:latest
+    ports:
+      - "8081:8081"
+
+    environment:
+      JAEGER_AGENT_HOST: jaegerAllinone
+      JAEGER_AGENT_PORT: 14268
+
+    networks:
+      - spp-network
+    depends_on:
+      - jaegerAllinone
+
+
+  jaegerFrontend:
+    build:
+      dockerfile: dockerfile
+      context: ./jaegerFrontend
+
+    image: jaeger_frontend_image:latest
+    ports:
+      - "8080:8080"
+    #hostname: jaegerFrontend
+    environment:
+       BACKEND_HOST: jaegerBackend
+       JAEGER_AGENT_HOST: jaegerAllinone
+       JAEGER_AGENT_PORT: 14268
+
+    networks:
+      - spp-network
+    depends_on:
+      - jaegerAllinone
+      - jaegerBackend
+
+
+networks:
+  spp-network:
+    driver: bridge

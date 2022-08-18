@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.frontendApp.name}}-deployment
+  labels:
+    {{- include "chart.labels" . | indent 2 }}
+    fico.application.name: {{ .Values.frontendApp.name}}
+
+spec:
+  replicas: {{ .Values.frontendApp.replicas }}
+  selector:
+    matchLabels:
+      {{- include "chart.labels" . | indent 4 }}
+      fico.application.name: {{ .Values.frontendApp.name}}
+  template:
+    metadata:
+      labels:
+        {{- include "chart.labels" . | indent 6 }}
+        fico.application.name: {{ .Values.frontendApp.name}}
+    spec:
+      containers:
+        - name: jaeger-frontend-container
+          image: {{ .Values.frontendApp.image }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .Values.frontendApp.port}}
+          env:
+            - name: JAEGER_AGENT_HOST
+              value: jaeger-service
+
+            - name: JAEGER_AGENT_PORT
+              value: "14268"
+
+            - name: BACKEND_HOST
+              value: {{ .Values.backendApp.name }}-service
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.frontendApp.name}}-service
+  labels:
+    {{- include "chart.labels" . | indent 2 }}
+    fico.application.name: {{ .Values.frontendApp.name}}-svc
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30011
+  selector:
+    {{- include "chart.labels" . | indent 2 }}
+    fico.application.name: {{ .Values.frontendApp.name }}

@@ -1,0 +1,95 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.jaegerui.name }}-deployment
+  labels:
+    {{- include "chart.labels" . | indent 2 }}
+    fico.application.name: {{ .Values.jaegerui.name}}
+spec:
+  replicas: {{ .Values.jaegerui.replicas }}
+  selector:
+    matchLabels:
+      {{- include "chart.labels" . | indent 4 }}
+      fico.application.name: {{ .Values.jaegerui.name}}
+  template:
+    metadata:
+      labels:
+        {{- include "chart.labels" . | indent 6 }}
+        fico.application.name: {{ .Values.jaegerui.name}}
+    spec:
+      containers:
+        - name: jaeger-deployment
+          image: {{ .Values.jaegerui.image }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: udp-port
+              protocol: UDP
+              containerPort: 6831
+            - name: udp-binary-port
+              protocol: UDP
+              containerPort: 6832
+            - name: jaeger-ui-port
+              protocol: TCP
+              containerPort: 16686
+            - name: http-col-port #must be no more than 15 characters
+              protocol: TCP
+              containerPort: 14268
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    {{- include "chart.labels" . | indent 2 }}
+    fico.application.name: jaeger-server-service
+  name: jaeger-service
+spec:
+  type: ClusterIP
+  ports:
+    - name: udp-port
+      protocol: UDP
+      port: 6831
+      targetPort: 6831
+
+    - name: udp-binary-port
+      protocol: UDP
+      port: 6832
+      targetPort: 6832
+
+    - name: jaeger-ui-port
+      protocol: TCP
+      port: 16686
+      targetPort: 16686
+
+    - name: http-col-port
+      protocol: TCP
+      port: 14268
+      targetPort: 14268
+
+  selector:
+    {{- include "chart.labels" . | indent 2 }}
+    fico.application.name: {{ .Values.jaegerui.name}}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    {{- include "chart.labels" . | indent 2 }}
+    fico.application.name: {{ .Values.jaegerui.name }}-service
+  name: jaeger-ui-service
+spec:
+  type: NodePort
+  ports:
+    - name: jaeger-ui-port
+      protocol: TCP
+      port: 16686
+      targetPort: 16686
+      nodePort: 30010
+  selector:
+    {{- include "chart.labels" . | indent 2 }}
+    fico.application.name: {{ .Values.jaegerui.name}}
+
+

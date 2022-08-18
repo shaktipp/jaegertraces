@@ -1,0 +1,27 @@
+FROM amazoncorretto:18
+
+MAINTAINER Shakti Panda <shaktiprasadapanda@fico.com>
+
+RUN yum -y install curl wget vim iputils nc
+
+RUN mkdir -p /apps/jaegerBackend
+
+WORKDIR /apps/jaegerBackend
+
+ENV DMP_DATA_DIR /app-root/runtime/data
+ENV DMP_REPO_DIR /app-root/runtime/repo
+ENV DMP_TMP_DIR /tmp
+
+# ENV DATABASE_HOST mysqldb
+# ENV MYSQL_ROOT_PASSWORD root
+# ENV MYSQL_USER shaktipp
+# ENV MYSQL_PASSWORD shaktipp
+# ENV MYSQL_DATABASE oteldb
+
+EXPOSE 8081
+
+COPY jaegerBackend.jar .
+
+#ENTRYPOINT ["java","-jar","./jaegerBackend.jar"]
+
+CMD ["java","-jar","./jaegerBackend.jar"]
