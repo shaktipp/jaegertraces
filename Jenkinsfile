@@ -19,12 +19,7 @@ pipeline
                 git credentialsId: 'gitHubCredential', url: v_bitBucketUrl, branch: v_bitbucketBranchName
             }
         }
-        stage('Build')
-        {
-            steps{
-                
-            }
-        }
+        
 
 
     }//End of stages block
