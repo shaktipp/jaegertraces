@@ -9,6 +9,7 @@ pipeline
     tools {
         //Maven Tool Version
         maven "maven363"
+        jdk "jdk18"
     }
 
     stages
