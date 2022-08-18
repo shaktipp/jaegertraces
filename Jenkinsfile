@@ -20,23 +20,14 @@ pipeline
             }
         }
         
-        stage('Backend Build')
+        stage('Maven Build')
         {
-            steps{
-                sh "cd ./jaegerBackend"
-                sh "mvn clean install -DskipTests=true -U"
-                sh "cd .."
+            steps{                
+                sh "mvn clean install -DskipTests=true -U"               
             }
         }
         
-        stage('Frontend Build')
-        {
-            steps{
-                sh "cd ./jaegerFrontend"
-                sh "mvn clean install -DskipTests=true -U"
-                sh "cd .."
-            }
-        }
+       
         
 
 
