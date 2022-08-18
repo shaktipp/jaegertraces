@@ -27,6 +27,16 @@ pipeline
                 sh "mvn clean install -DskipTests=true -U"               
             }
         }
+
+        stage('Build Images')
+        {
+            steps
+            {
+                sh "cd ./docker-compose"
+                sh "sh docker compose build"
+                sh "cd .."
+            }
+        }
         
        
         
