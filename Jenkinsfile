@@ -35,17 +35,28 @@ pipeline
                 dir("${env.WORKSPACE}/docker-compose/jaegerBackend")
                 {
                     sh "pwd"
+                    echo "Build Docker Image: shaktipp/jaeger_backend_image:latest"
                     sh "docker build -t shaktipp/jaeger_backend_image:latest ."
+
+                    echo "Push Docker Image: shaktipp/jaeger_backend_image:latest"
+                    sh "docker push shaktipp/jaeger_backend_image:latest"
                 }
+            }
+        }
 
+        stage('Frontend Image')
+        {
+            steps
+            {
+                dir("${env.WORKSPACE}/docker-compose/jaegerFrontend")
+                {
+                    sh "pwd"
+                    echo "Build Docker Image: shaktipp/jaeger_frontend_image:latest"
+                    sh "docker build -t shaktipp/jaeger_frontend_image:latest ."
 
-//                 def backend_path = ${WORKSPACE}/docker-compose/jaegerBackend
-//                 sh "cd $backend_path"
-//                 echo "Current Directory:$backend_path"
-//
-//                 //app = docker.build("shaktipp/jaeger_backend_image:latest")
-//                 sh "docker build -t shaktipp/jaeger_backend_image:latest ."
-
+                    echo "Push Docker Image: shaktipp/jaeger_frontend_image:latest"
+                    sh "docker push shaktipp/jaeger_frontend_image:latest"
+                }
             }
         }
         
