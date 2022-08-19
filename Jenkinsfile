@@ -33,7 +33,7 @@ pipeline
             steps
             {
 
-                def backend_path = $workspace/docker-compose/jaegerBackend
+                def backend_path = ${WORKSPACE}/docker-compose/jaegerBackend
                 sh "cd $backend_path"
                 echo "Current Directory:$backend_path"
 
