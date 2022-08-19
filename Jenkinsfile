@@ -6,8 +6,6 @@ pipeline
 {
     agent any
 
-    def app
-
     tools {
         //Maven Tool Version
         maven "maven363"
@@ -36,7 +34,8 @@ pipeline
             {
                 sh "cd ./docker-compose/jaegerBackend"
                 echo "Current Directory:$PWD"
-                app = docker.build("shaktipp/jaeger_backend_image:latest")
+                //app = docker.build("shaktipp/jaeger_backend_image:latest")
+                sh "docker build -t shaktipp/jaeger_backend_image:latest ."
             }
         }
         
