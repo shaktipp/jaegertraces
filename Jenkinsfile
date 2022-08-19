@@ -67,6 +67,23 @@ pipeline
 
                 }
             }
+
+            stage('Jaeger Image')
+            {
+                steps
+                {
+                    withDockerRegistry([ credentialsId: "dockerHubCredentials", url: "" ])
+                    {
+                        echo "Pull Docker Image from dockerHub: jaegertracing/all-in-one:1.35"
+                        sh "docker pull jaegertracing/all-in-one:1.35"
+
+                        sh "Tag the docker Image to shaktipp/jaegertracing-all-in-one:1.35"
+                        sh "docker tag jaegertracing/all-in-one:1.35 shaktipp/jaegertracing-all-in-one:1.35"
+
+                        echo "Push Docker Image: shaktipp/jaegertracing-all-in-one:1.35"
+                        sh "docker push shaktipp/jaegertracing-all-in-one:1.35"
+                    }
+                }
         }
         
        
