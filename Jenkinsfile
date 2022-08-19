@@ -38,8 +38,13 @@ pipeline
                     echo "Build Docker Image: shaktipp/jaeger_backend_image:latest"
                     sh "docker build -t shaktipp/jaeger_backend_image:latest ."
 
-                    echo "Push Docker Image: shaktipp/jaeger_backend_image:latest"
-                    sh "docker push shaktipp/jaeger_backend_image:latest"
+                    withDockerRegistry([ credentialsId: "dockerHubCredentials", url: "" ])
+                    {
+                        echo "Push Docker Image: shaktipp/jaeger_backend_image:latest"
+                        sh "docker push shaktipp/jaeger_backend_image:latest"
+                    }
+
+
                 }
             }
         }
@@ -54,8 +59,12 @@ pipeline
                     echo "Build Docker Image: shaktipp/jaeger_frontend_image:latest"
                     sh "docker build -t shaktipp/jaeger_frontend_image:latest ."
 
-                    echo "Push Docker Image: shaktipp/jaeger_frontend_image:latest"
-                    sh "docker push shaktipp/jaeger_frontend_image:latest"
+                    withDockerRegistry([ credentialsId: "dockerHubCredentials", url: "" ])
+                    {
+                        echo "Push Docker Image: shaktipp/jaeger_frontend_image:latest"
+                        sh "docker push shaktipp/jaeger_frontend_image:latest"
+                    }
+
                 }
             }
         }
