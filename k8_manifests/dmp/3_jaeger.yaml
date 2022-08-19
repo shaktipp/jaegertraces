@@ -20,11 +20,12 @@ spec:
         fico.application.owner: ProgramBlue
         fico.application.name: jaeger-server-deployment
     spec:
-      imagePullSecrets:
-        - name: dmpregistrykey
+#      imagePullSecrets:
+#        - name: dmpregistrykey
       containers:
         - name: jaeger-deployment
-          image: fico-dmp-docker-development.jfrog.io/fico/observability/jaeger-tracing-all-in-one:1.35
+          #image: fico-dmp-docker-development.jfrog.io/fico/observability/jaeger-tracing-all-in-one:1.35
+          image: shaktipp/jaegertracing-all-in-one:1.35
           imagePullPolicy: Always
           ports:
             - name: udp-port

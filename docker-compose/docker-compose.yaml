@@ -15,13 +15,17 @@ services:
     networks:
       - spp-network
 
+  jaegerAllinone-latest:
+    extends: jaegerAllinone
+    image: shaktipp/jaegertracing-all-in-one:1.35
+
 
   jaegerBackend:
     build:
       dockerfile: dockerfile
       context: ./jaegerBackend
 
-    image: jaeger_backend_image:latest
+    image: shaktipp/jaeger_backend_image:latest
     ports:
       - "8081:8081"
 
@@ -40,7 +44,7 @@ services:
       dockerfile: dockerfile
       context: ./jaegerFrontend
 
-    image: jaeger_frontend_image:latest
+    image: shaktipp/jaeger_frontend_image:latest
     ports:
       - "8080:8080"
     #hostname: jaegerFrontend
