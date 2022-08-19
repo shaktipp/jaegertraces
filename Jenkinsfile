@@ -32,9 +32,11 @@ pipeline
         {
             steps
             {
+
                 def backend_path = $workspace/docker-compose/jaegerBackend
                 sh "cd $backend_path"
                 echo "Current Directory:$backend_path"
+
                 //app = docker.build("shaktipp/jaeger_backend_image:latest")
                 sh "docker build -t shaktipp/jaeger_backend_image:latest ."
             }
