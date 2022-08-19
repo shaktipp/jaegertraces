@@ -6,6 +6,8 @@ pipeline
 {
     agent any
 
+    def app
+
     tools {
         //Maven Tool Version
         maven "maven363"
@@ -28,13 +30,13 @@ pipeline
             }
         }
 
-        stage('Build Images')
+        stage('Backend Image')
         {
             steps
             {
-                sh "cd ./docker-compose"
-                sh "docker compose build"
-                sh "cd .."
+                sh "cd ./docker-compose/jaegerBackend"
+                echo "Current Directory:$PWD"
+                app = docker.build("shaktipp/jaeger_backend_image:latest")
             }
         }
         
