@@ -1,5 +1,5 @@
 apiVersion: v2
-name: jaegerChart
+name: jaegerchart
 description: A Helm chart used to send Traces & metrics to Jaeger UI
 
 # A chart can be either an 'application' or a 'library' chart.
