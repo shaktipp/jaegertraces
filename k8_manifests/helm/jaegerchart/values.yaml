@@ -16,4 +16,4 @@ frontendApp:
   port: 8080
 
 ingress:
-  name: jaegee-ingress
+  name: jaeger-ingress
