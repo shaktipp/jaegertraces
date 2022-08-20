@@ -81,13 +81,13 @@ metadata:
     fico.application.name: {{ .Values.jaegerui.name }}-service
   name: jaeger-ui-service
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
     - name: jaeger-ui-port
       protocol: TCP
       port: 16686
       targetPort: 16686
-      nodePort: 30010
+      #nodePort: 30010
   selector:
     {{- include "chart.labels" . | indent 2 }}
     fico.application.name: {{ .Values.jaegerui.name}}

@@ -6,11 +6,11 @@ jaegerui:
 backendApp:
   name: backend-app
   replicas: 1
-  image: jaeger_backend_image:latest
+  image: shaktipp/jaeger_backend_image:latest
   port: 8081
 
 frontendApp:
   name: frontend-app
   replicas: 1
-  image: jaeger_frontend_image:latest
+  image: shaktipp/jaeger_frontend_image:latest
   port: 8080

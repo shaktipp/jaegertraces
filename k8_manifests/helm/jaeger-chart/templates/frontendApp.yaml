@@ -45,11 +45,11 @@ metadata:
     {{- include "chart.labels" . | indent 2 }}
     fico.application.name: {{ .Values.frontendApp.name}}-svc
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
     - port: 8080
       targetPort: 8080
-      nodePort: 30011
+      #nodePort: 30011
   selector:
     {{- include "chart.labels" . | indent 2 }}
     fico.application.name: {{ .Values.frontendApp.name }}
