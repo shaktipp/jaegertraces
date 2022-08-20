@@ -73,7 +73,7 @@ pipeline
         {
             steps
             {
-                withDockerRegistry([ credentialsId: "dockerHubCredentials", url: "" ])
+                withDockerRegistry([ credentialsId: "dockerHubCredential", url: "" ])
                 {
                     echo "Pull Docker Image from dockerHub: jaegertracing/all-in-one:1.35"
                     sh "docker pull jaegertracing/all-in-one:1.35"
