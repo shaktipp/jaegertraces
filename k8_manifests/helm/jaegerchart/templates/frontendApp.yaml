@@ -45,7 +45,7 @@ metadata:
     {{- include "chart.labels" . | indent 2 }}
     fico.application.name: {{ .Values.frontendApp.name}}-svc
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - port: 8080
       targetPort: 8080

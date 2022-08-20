@@ -14,3 +14,6 @@ frontendApp:
   replicas: 1
   image: shaktipp/jaeger_frontend_image:latest
   port: 8080
+
+ingress:
+  name: jaegee-ingress

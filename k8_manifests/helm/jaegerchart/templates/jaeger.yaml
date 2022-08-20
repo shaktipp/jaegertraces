@@ -81,7 +81,7 @@ metadata:
     fico.application.name: {{ .Values.jaegerui.name }}-service
   name: jaeger-ui-service
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: jaeger-ui-port
       protocol: TCP
